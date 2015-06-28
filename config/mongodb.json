@@ -1,0 +1,24 @@
+{
+  "test": {
+    "uri": "mongodb://localhost/pongbattle",
+    "config": {}
+  },
+  "development": {
+    "uri": "mongodb://localhost/pongbattle",
+    "config": {}
+  },
+  "staging": {
+    "uri": "TBD",
+    "config": {
+      "user": "TBD",
+      "pass": "TBD"
+    }
+  },
+  "production": {
+    "uri": "TBD",
+    "config": {
+      "user": "TBD",
+      "pass": "TBD"
+    }
+  }
+}

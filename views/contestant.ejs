@@ -1,0 +1,17 @@
+<%- include('head_html'); %>
+<%- include('nav_html'); %>
+<div class="container">
+  <h1>Edit your contestant</h1>
+  <form action="/contestant/<%= id %>" method="post">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="The Super Paddle" value="<%= contestant.name %>">
+    </div>
+    <div class="form-group">
+      <label for="code">Code</label>
+      <textarea class="form-control" id="code" placeholder="Code your contestant" name="code" rows="10"><%= contestant.code %></textarea>
+    </div>
+    <button type="submit" class="btn btn-default">Save contestant</button>
+  </form>
+</div>
+<%- include('footer_html'); %>

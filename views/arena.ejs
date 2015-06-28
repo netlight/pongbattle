@@ -1,0 +1,89 @@
+<%- include('head_html'); %>
+<style>
+  .highscore {
+    float: right;
+    width: 300px;
+  }
+</style>
+<div class="highscore">
+  <h1>Highscore</h1>
+  <table class="table highscoreTable">
+    <thead>
+    <tr><th>Name</th><th>Score</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>bla</td><td>blub</td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="playField">
+  <h1>"<span class="player1Name"></span>" vs. "<span class="player2Name"></span>"</h1>
+  <canvas id="game">
+    <div id="unsupported">
+      Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element
+    </div>
+  </canvas>
+</div>
+<script src="/js/game.js" type="text/javascript"></script>
+<script src="/js/pong.js" type="text/javascript"></script>
+<script type="text/javascript">
+  Game.ready(function() {
+    console.log('game ready');
+  });
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+  socket.on('connect', function(){
+    console.log('connected');
+    socket.emit('getContestants');
+    socket.emit('getHighscores');
+  });
+  socket.on('getHighscores', function(highscores){
+    var line = $('<tr><td class="name"></td><td class="score"></td></tr>');
+    var content = $('.highscoreTable tbody');
+    content.html("");
+    for (var i=0;i<highscores.length;i++) {
+      var score = highscores[i];
+      var l = line.clone();
+      l.find('.name').html(score.name);
+      l.find('.score').html(score.wins);
+      content.append(l);
+    }
+  });
+  var pong;
+  socket.on('getContestants', function(contestantLeft, contestantRight){
+    $( document ).ready(function() {
+      console.log('got contestants ', contestantLeft, contestantRight);
+      $('.player1Name').html(contestantLeft.name);
+      $('.player2Name').html(contestantRight.name);
+      if (pong) {
+        pong.runner.stop();
+        delete pong;
+      }
+      pong = Game.start('game', Pong, {
+        seedRandom: new Math.seedrandom(contestantLeft.codeHash + contestantRight.codeHash),
+        sound:       true,
+        stats:       false,
+        footprints:  false,
+        predictions: false,
+        aiFunc1: new Function(["paddleInfo", "ballInfo", "gameInfo"], contestantLeft.code),
+        aiFunc2: new Function(["paddleInfo", "ballInfo", "gameInfo"], contestantRight.code),
+        onLoad: function(game) {
+          game.start(0);
+        },
+        onWin: function(winningPlayer, scoreLeft, scoreRight) {
+          pong.runner.draw();
+          socket.emit('saveResult', { contestants: [contestantLeft._id, contestantRight._id], winner: winningPlayer===0?contestantLeft._id:contestantRight._id, scoreLeft: scoreLeft, scoreRight: scoreRight });
+          setTimeout(function() {
+            console.log('starting new game');
+            socket.emit('getContestants');
+            socket.emit('getHighscores');
+          }, 3000);
+        }
+      });
+    });
+  });
+</script>
+<%- include('footer_html'); %>
+
