@@ -20,6 +20,7 @@
       <div class="canvasWrapper"><canvas id="game"></canvas></div>
       <div id="editor" style="width: 600px; height: 250px;"><%= contestant.code %></div>
       <h4>}</h4>
+      <div class="alert alert-danger codeAlert" role="alert" style="display: none;">Your code could not be validated!</div>
       <button type="submit" class="btn btn-default btnSubmit">Save contestant</button>
       <h3>
         Return Value
@@ -68,19 +69,30 @@ paddleInfo = {
     </div>
   </form>
   <script>
-    $('form').on('submit', function() {
+    function validateCode() {
       var codeValid = false;
       var code = editor.getValue();
       try {
         var f = new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], code)
-        f(0.1, {}, {}, {});
-        codeValid = true;
+        var result = f(0.1, testPaddleInfo, testBallInfo, testGameInfo);
+        codeValid = isNumber(result);
       }
       catch(err) {
         codeValid = false;
       }
+      $(".codeAlert").toggle(!codeValid);
+      return codeValid;
+    }
+    var testGameInfo = JSON.parse('{"ballAccel":8,"ballRadius":5,"width":640,"height":480}');
+    var testBallInfo = JSON.parse('{"x":283.9331280000011,"y":381.7914879999998,"radius":5,"minX":5,"maxX":635,"minY":17,"maxY":463,"dx":-174.43599999999924,"dy":-174.43599999999924,"speed":157.5}');
+    var testPaddleInfo = JSON.parse('{"x":0,"y":408,"minY":12,"maxY":408,"height":60,"width":12}');
+    function isNumber(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+    $('form').on('submit', function() {
+      var codeValid = validateCode();
       if (codeValid) {
-        $("#submitCode").val(code);
+        $("#submitCode").val(editor.getValue());
       }
       return codeValid;
     });
@@ -137,21 +149,24 @@ return ballInfo.y-paddleInfo.y;
       pong.runner.stop();
       delete pong;
     }
-    pong = Game.start('game', Pong, {
-      sound:       true,
-      stats:       false,
-      footprints:  false,
-      predictions: false,
-      scale: 0.5,
-      aiFunc1: new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], editor.getValue()),
-      aiFunc2: new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], editor.getValue()),
-      onLoad: function(game) {
-        game.start(0);
-      },
-      onWin: function(winningPlayer, scoreLeft, scoreRight) {
-      }
-    });
+    if (validateCode()) {
+      pong = Game.start('game', Pong, {
+        sound:       true,
+        stats:       false,
+        footprints:  false,
+        predictions: false,
+        scale: 0.5,
+        aiFunc1: new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], editor.getValue()),
+        aiFunc2: new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], editor.getValue()),
+        onLoad: function(game) {
+          game.start(0);
+        },
+        onWin: function(winningPlayer, scoreLeft, scoreRight) {
+        }
+      });
+    }
   }
   editor.on('change', debounce(update, 1000));
+  setTimeout(update, 1000);
 </script>
 <%- include('footer_html'); %>
