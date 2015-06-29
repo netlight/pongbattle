@@ -39,7 +39,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var basicAuth = require('basic-auth-connect');
-var protect = basicAuth('car', 'peero');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 app.set('view engine', 'ejs');
