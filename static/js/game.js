@@ -20,13 +20,14 @@ var Runner = function(id, game, cfg) {
 	this.width        = this.cfg.width  || this.canvas.offsetWidth;
 	this.height       = this.cfg.height || this.canvas.offsetHeight;
 	this.front        = this.canvas;
-	this.front.width  = this.width;
-	this.front.height = this.height;
+	this.front.width  = this.width * this.cfg.scale;
+	this.front.height = this.height * this.cfg.scale;
 	this.back         = Game.createCanvas();
-	this.back.width   = this.width;
-	this.back.height  = this.height;
+	this.back.width   = this.width * this.cfg.scale;
+	this.back.height  = this.height * this.cfg.scale;
 	this.front2d      = this.front.getContext('2d');
 	this.back2d       = this.back.getContext('2d');
+	this.back2d.scale(this.cfg.scale, this.cfg.scale);
 	this.resetStats();
 	this.game = new game(this, this.cfg); // finally construct the game object itself
 };

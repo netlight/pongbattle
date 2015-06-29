@@ -23,7 +23,8 @@ function Pong(runner, cfg) {
 	};
 Pong.Defaults = {
 	width: 640,   // logical canvas width (browser will scale to physical canvas size - which is controlled by @media css queries)
-	height: 480,   // logical canvas height (ditto)
+	height: 480, // logical canvas height (ditto)
+	scale: 1,
 	wallWidth: 12,
 	paddleWidth: 12,
 	paddleHeight: 60,
@@ -31,6 +32,7 @@ Pong.Defaults = {
 	ballSpeed: 4,     // should be able to cross court horizontally in 4 seconds, at starting speed ...
 	ballAccel: 8,     // ... but accelerate as time passes
 	ballRadius: 5,
+	seedRandom: Math.random,
 	sound: true,
 	aiFunc1: function () {
 		return 0;
@@ -130,10 +132,10 @@ Pong.Sounds = {
 			this.supported = Game.ua.hasAudio;
 			if (this.supported) {
 				this.files = {
-					ping: Game.createAudio("sounds/ping.wav"),
-					pong: Game.createAudio("sounds/pong.wav"),
-					wall: Game.createAudio("sounds/wall.wav"),
-					goal: Game.createAudio("sounds/goal.wav")
+					ping: Game.createAudio("/sounds/ping.wav"),
+					pong: Game.createAudio("/sounds/pong.wav"),
+					wall: Game.createAudio("/sounds/wall.wav"),
+					goal: Game.createAudio("/sounds/goal.wav")
 				};
 			}
 		},
@@ -290,7 +292,7 @@ Pong.Paddle = {
 				width: this.pong.cfg.width,
 				height: this.pong.cfg.height
 			};
-			var result = this.aiFunc(paddleInfo, ballInfo, gameInfo);
+			var result = this.aiFunc(dt, paddleInfo, ballInfo, gameInfo);
 			var amount = 0;
 			if (result === 0) {
 				return;

@@ -1,17 +1,157 @@
 <%- include('head_html'); %>
 <%- include('nav_html'); %>
+<style>
+  .canvasWrapper {
+    float: right;
+  }
+</style>
 <div class="container">
-  <h1>Edit your contestant</h1>
+  <h1>Create your contestant</h1>
   <form action="/contestant/<%= id %>" method="post">
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" class="form-control" id="name" name="name" placeholder="The Super Paddle" value="<%= contestant.name %>">
+      <input type="hidden" id="submitCode" name="code">
     </div>
     <div class="form-group">
       <label for="code">Code</label>
-      <textarea class="form-control" id="code" placeholder="Code your contestant" name="code" rows="10"><%= contestant.code %></textarea>
+      <p>This where you can unleash the power of your own contestant. You may write code in here. What you are writing is JavaScript. You have to create the body of a function that returns a number. This number will instruct your paddle to which direction it should move.</p>
+      <h4>function movePaddle(dt, paddleInfo, ballInfo, gameInfo) {</h4>
+      <div class="canvasWrapper"><canvas id="game"></canvas></div>
+      <div id="editor" style="width: 600px; height: 250px;"><%= contestant.code %></div>
+      <h4>}</h4>
+      <button type="submit" class="btn btn-default btnSubmit">Save contestant</button>
+      <h3>
+        Return Value
+      </h3>
+      <ul><strong>returning 0: </strong> tells your paddle to <strong>stay at the current position</strong></ul>
+      <ul><strong>returning -1: </strong> tells your paddle to move <strong>up</strong></ul>
+      <ul><strong>returning 1: </strong> tells your paddle to move <strong>down</strong></ul>
+      <h3>
+        Input Values
+      </h3>
+<pre>
+<strong>dt</strong> the number of seconds (including fractional seconds) that has elapsed since your function has last been called. Your paddle will move by the fraction of speed of this number within this step.
+</pre>
+<pre>
+paddleInfo = {
+  x: x coordinate of the paddle,
+  y: y coordinate of the paddle,
+  minY: upper boundary to where the paddle can move,
+  maxY: lower boundary to where the paddle can move,
+  height: height of the paddle,
+  width: width of the paddle
+};
+</pre>
+<pre>
+<strong>ballInfo</strong> = {
+  x: current x coordinate of the ball
+  y: current y coordinate of the ball
+  radius: radius of the ball
+  minX: minimum x of the ball
+  maxX: max x of the ball
+  minY: min y of the ball
+  maxY: max y of the ball
+  dx: movement speed per second (see dt) of the ball in x direction
+  dy: movement speed per second (see dt) of the ball in y direction
+  speed: general  speed of the ball
+};
+</pre>
+<pre>
+<strong>gameInfo</strong> = {
+  ballAccel: general ball acclereration
+  ballRadius: general ball radius
+  width: width of the game field
+  height: height of the game field
+};
+</pre>
     </div>
-    <button type="submit" class="btn btn-default">Save contestant</button>
   </form>
+  <script>
+    $('form').on('submit', function() {
+      var codeValid = false;
+      var code = editor.getValue();
+      try {
+        var f = new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], code)
+        f(0.1, {}, {}, {});
+        codeValid = true;
+      }
+      catch(err) {
+        codeValid = false;
+      }
+      if (codeValid) {
+        $("#submitCode").val(code);
+      }
+      return codeValid;
+    });
+  </script>
+  <h2>Contestant Examples</h2>
+  <p>To get you going we have compiled some examples that you should use to see how a contestant can behave.</p>
+  <h3>The "Move Up"</h3>
+  <p>A paddle the can only go up.</p>
+<pre>
+return 1;
+</pre>
+  <h3>The "Move Down"</h3>
+  <p>A paddle the is a real downer.</p>
+<pre>
+return -11;
+</pre>
+  <h3>The "Move Random"</h3>
+  <p>A pretty indecisive paddle</p>
+<pre>
+return Math.random()-0.5;
+</pre>
+  <h3>The "Ball Mover"</h3>
+  <p>Always keeping up with the important guy.</p>
+<pre>
+return ballInfo.y-paddleInfo.y;
+</pre>
+  <h3>Your own</h3>
+  <p>Think of more complex ones. What can you build? How can you anticipate where the ball will hit your paddle. And remember the ball will move faster and faster.</p>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+  Game.ready(function() {
+    console.log('game ready');
+  });
+  var editor = ace.edit("editor");
+  editor.getSession().setMode("ace/mode/javascript");
+  function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  };
+  var pong;
+  function update() {
+    if (pong) {
+      pong.runner.stop();
+      delete pong;
+    }
+    pong = Game.start('game', Pong, {
+      sound:       true,
+      stats:       false,
+      footprints:  false,
+      predictions: false,
+      scale: 0.5,
+      aiFunc1: new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], editor.getValue()),
+      aiFunc2: new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], editor.getValue()),
+      onLoad: function(game) {
+        game.start(0);
+      },
+      onWin: function(winningPlayer, scoreLeft, scoreRight) {
+      }
+    });
+  }
+  editor.on('change', debounce(update, 1000));
+</script>
 <%- include('footer_html'); %>
