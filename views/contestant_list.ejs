@@ -1,0 +1,43 @@
+<%- include('head_html'); %>
+<%- include('nav_html'); %>
+<style>
+  .canvasWrapper {
+    float: right;
+  }
+</style>
+<div class="container">
+  <h1>Contestant List</h1>
+  <table class="table">
+    <thead>
+      <tr><th>Contestant Name</th><th>Name</th><th>E-Mail</th><th>Options</th></tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+</div>
+<script>
+  var lineMaster = $('<tr><td class="name"></td><td class="personName"></td><td class="personEmail"></td><td><button class="btn btn-default btn-error btnDelete">Delete</button></td>')
+  function loadData() {
+    $("table tbody").html("");
+    $.ajax("/api/contestants").done(function(contestants) {
+      for (var i=0;i<contestants.length;i++) {
+        var contestant = contestants[i];
+        var line = lineMaster.clone();
+        line.find('.name').html(contestant.name);
+        line.find('.personEmail').html(contestant.personEmail);
+        line.find('.personName').html(contestant.personName);
+        line.data('contestant', contestant);
+        line.find('.btnDelete').click(function() {
+          var id = $(this).parents('tr').data('contestant')._id;
+          $.ajax("/api/contestant/"+id, {method:"delete"}).done(function() {
+            loadData();
+          });
+        });
+        $("table tbody").append(line);
+      }
+    });
+  }
+  loadData();
+</script>
+<%- include('footer_html'); %>

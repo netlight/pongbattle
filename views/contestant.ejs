@@ -8,10 +8,18 @@
 <div class="container">
   <h1>Create your contestant</h1>
   <form action="/contestant/<%= id %>" method="post">
+    <input type="hidden" id="submitCode" name="code">
     <div class="form-group">
-      <label for="name">Name</label>
+      <label for="name">KI Name</label>
       <input type="text" class="form-control" id="name" name="name" placeholder="The Super Paddle" value="<%= contestant.name %>">
-      <input type="hidden" id="submitCode" name="code">
+    </div>
+    <div class="form-group">
+      <label for="personName">Eigener Name</label>
+      <input type="text" class="form-control" id="personName" name="personName" placeholder="Erik Ringertz" value="<%= contestant.personName %>">
+    </div>
+    <div class="form-group">
+      <label for="personEmail">E-Mail-Adresse</label>
+      <input type="text" class="form-control" id="personEmail" name="personEmail" placeholder="erik.ringertz@netlight.com" value="<%= contestant.personEmail %>">
     </div>
     <div class="form-group">
       <label for="code">Code</label>

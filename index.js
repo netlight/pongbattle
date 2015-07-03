@@ -42,13 +42,17 @@ var basicAuth = require('basic-auth-connect');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 app.set('view engine', 'ejs');
+var protectThis = basicAuth('admin','Netlight-123');
 var jsonParser = bodyParser.json();
-var formParser = bodyParser.urlencoded();
+var formParser = bodyParser.urlencoded({extended: true});
 app.use(jsonParser);
 app.use(formParser);
 app.use(express.static('static'));
 app.get('/arena', function(req, res, next) {
   res.render('arena');
+});
+app.get('/', function(req, res, next) {
+  res.render('index');
 });
 app.get('/contestant/:id', function(req, res) {
   async.waterfall([
@@ -68,6 +72,8 @@ app.post('/contestant/:id', function(req, res) {
   function store(c) {
     c.name = req.body.name;
     c.code = req.body.code;
+    c.personName = req.body.personName;
+    c.personEmail = req.body.personEmail;
     c.save(function(err) {
       if (err) {
         return res.send(err);
@@ -85,6 +91,35 @@ app.post('/contestant/:id', function(req, res) {
     }
     return store(c);
   });
+});
+app.get('/api/contestants', function(req, res) {
+  Contestant.findAll(function(err, contestants) {
+    if (err) {
+      return res.end(err);
+    }
+    return res.send(contestants);
+  });
+});
+app.delete('/api/contestant/:id', [protectThis], function(req, res) {
+  Contestant.findById(req.params.id, function(err, contestant) {
+    if (err) {
+      return res.end(err);
+    }
+    Result.removeForContestant(contestant._id, function(err) {
+      if (err) {
+        return res.end(err);
+      }
+      contestant.remove(function(err) {
+        if (err) {
+          return res.end(err);
+        }
+        return res.send({result:"ok"});
+      });
+    });
+  });
+});
+app.get('/contestants', [protectThis], function(req, res) {
+  res.render('contestant_list');
 });
 app.use(function(err, req, res, next) {
   res.set('content-type', 'application/json');
