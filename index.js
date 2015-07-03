@@ -95,7 +95,7 @@ app.post('/contestant/:id', function(req, res) {
   });
 });
 app.get('/api/contestants', function(req, res) {
-  Contestant.findAll(function(err, contestants) {
+  Contestant.findHighscores(function(err, contestants) {
     if (err) {
       return res.end(err);
     }
@@ -115,7 +115,12 @@ app.delete('/api/contestant/:id', [protectThis], function(req, res) {
         if (err) {
           return res.end(err);
         }
-        return res.send({result:"ok"});
+        Contestant.recalcAllScores(function(err) {
+          if (err) {
+            return res.end(err);
+          }
+          return res.send({result:"ok"});
+        });
       });
     });
   });
@@ -147,13 +152,7 @@ io.on('connection', function(socket) {
   socket.on('saveResult', function(result) {
     function updateCountsFor(id, cb) {
       Contestant.findById(id, function(err, c) {
-        Result.getWinCountForPlayer(id, function(err, loadedWins) {
-          c.wins = loadedWins;
-          Result.getResultCountForPlayer(id, function(err, loadedResults) {
-            c.results = loadedResults;
-            c.save(cb);
-          });
-        });
+        c.recalcScores(cb);
       })
     }
     console.log('wants to save result $j', result);
