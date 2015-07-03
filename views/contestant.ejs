@@ -19,7 +19,15 @@
     </div>
     <div class="form-group">
       <label for="personEmail">E-Mail-Adresse</label>
-      <input type="text" class="form-control" id="personEmail" name="personEmail" placeholder="erik.ringertz@netlight.com" value="<%= contestant.personEmail %>">
+      <input type="email" class="form-control" id="personEmail" name="personEmail" placeholder="erik.ringertz@netlight.com" value="<%= contestant.personEmail %>">
+    </div>
+    <div class="form-group">
+      <label for="personProgram">Studiengang</label>
+      <input type="text" class="form-control" id="personProgram" name="personProgram" placeholder="e.g. Informatik" value="<%= contestant.personProgram %>">
+    </div>
+    <div class="form-group">
+      <label for="personSemester">Semester</label>
+      <input type="number" class="form-control" id="personSemester" name="personSemester" placeholder="" value="<%= contestant.personSemester %>">
     </div>
     <div class="form-group">
       <label for="code">Code</label>

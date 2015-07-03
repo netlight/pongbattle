@@ -74,6 +74,8 @@ app.post('/contestant/:id', function(req, res) {
     c.code = req.body.code;
     c.personName = req.body.personName;
     c.personEmail = req.body.personEmail;
+    c.personSemester = req.body.personSemester;
+    c.personProgram = req.body.personProgram;
     c.save(function(err) {
       if (err) {
         return res.send(err);

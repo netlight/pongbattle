@@ -9,7 +9,7 @@
   <h1>Contestant List</h1>
   <table class="table">
     <thead>
-      <tr><th>Contestant Name</th><th>Name</th><th>E-Mail</th><th>Options</th></tr>
+      <tr><th>Contestant Name</th><th>Name</th><th>E-Mail</th><th>Score</th><th>Options</th></tr>
     </thead>
     <tbody>
 
@@ -17,7 +17,7 @@
   </table>
 </div>
 <script>
-  var lineMaster = $('<tr><td class="name"></td><td class="personName"></td><td class="personEmail"></td><td><button class="btn btn-default btn-error btnDelete">Delete</button></td>')
+  var lineMaster = $('<tr><td class="name"></td><td class="personName"></td><td class="personEmail"></td><td class="score"></td><td><a href="" class="btn btn-default btnEdit" role="button">Edit</a><button class="btn btn-default btn-delete btnDelete">Delete</button></td>')
   function loadData() {
     $("table tbody").html("");
     $.ajax("/api/contestants").done(function(contestants) {
@@ -25,9 +25,13 @@
         var contestant = contestants[i];
         var line = lineMaster.clone();
         line.find('.name').html(contestant.name);
+        line.find('.score').html(contestant.wins + "/" + contestant.results);
         line.find('.personEmail').html(contestant.personEmail);
         line.find('.personName').html(contestant.personName);
+        line.find('.personProgram').html(contestant.personProgram);
+        line.find('.personSemester').html(contestant.personSemester);
         line.data('contestant', contestant);
+        line.find('a.btnEdit').attr('href', "/contestant/"+contestant._id);
         line.find('.btnDelete').click(function() {
           var id = $(this).parents('tr').data('contestant')._id;
           $.ajax("/api/contestant/"+id, {method:"delete"}).done(function() {
