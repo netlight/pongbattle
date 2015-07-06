@@ -13,8 +13,8 @@ function Pong(runner, cfg) {
 			that.playing     = false;
 			that.scores      = [0, 0];
 			that.court       = Object.construct(Pong.Court,  that);
-			that.leftPaddle  = Object.construct(Pong.Paddle, that, false, cfg.aiFunc1);
-			that.rightPaddle = Object.construct(Pong.Paddle, that, true, cfg.aiFunc2);
+			that.leftPaddle  = Object.construct(Pong.Paddle, that, false, cfg.ai1);
+			that.rightPaddle = Object.construct(Pong.Paddle, that, true, cfg.ai2);
 			that.ball        = new Pong.Ball(that);
 			that.sounds      = Object.construct(Pong.Sounds, that);
 			that.runner.start();
@@ -27,8 +27,8 @@ Pong.Defaults = {
 	scale: 1,
 	wallWidth: 12,
 	paddleWidth: 12,
-	paddleHeight: 60,
-	paddleSpeed: 2,     // should be able to cross court vertically   in 2 seconds
+	paddleHeight: 120,
+	paddleSpeed: 1,     // should be able to cross court vertically   in 2 seconds
 	ballSpeed: 4,     // should be able to cross court horizontally in 4 seconds, at starting speed ...
 	ballAccel: 8,     // ... but accelerate as time passes
 	ballRadius: 5,
@@ -229,16 +229,17 @@ Pong.Court = {
 
 Pong.Paddle = {
 
-		initialize: function(pong, rhs, aiFunc) {
+		initialize: function(pong, rhs, ai) {
+			this.ai = ai;
 			this.pong   = pong;
 			this.width  = pong.cfg.paddleWidth;
-			this.height = pong.cfg.paddleHeight;
+			this.height = pong.cfg.paddleHeight * (this.ai.height/100);
 			this.minY   = pong.cfg.wallWidth;
 			this.maxY   = pong.height - pong.cfg.wallWidth - this.height;
-			this.speed  = (this.maxY - this.minY) / pong.cfg.paddleSpeed;
+			var maxSpeed = ((this.maxY - this.minY) / pong.cfg.paddleSpeed);
+			this.speed  = maxSpeed * (this.ai.speed/100);
 			this.setpos(rhs ? pong.width - this.width : 0, this.minY + (this.maxY - this.minY)/2);
 			this.setdir(0);
-			this.aiFunc = aiFunc;
 		},
 
 		setpos: function(x, y) {
@@ -292,7 +293,7 @@ Pong.Paddle = {
 				width: this.pong.cfg.width,
 				height: this.pong.cfg.height
 			};
-			var result = this.aiFunc(dt, paddleInfo, ballInfo, gameInfo);
+			var result = this.ai.movePaddle(dt, paddleInfo, ballInfo, gameInfo);
 			var amount = 0;
 			if (result === 0) {
 				return;
@@ -312,7 +313,7 @@ Pong.Paddle = {
 		},
 
 		draw: function(ctx) {
-			ctx.fillStyle = Pong.Colors.walls;
+			ctx.fillStyle = this.ai.color;
 			ctx.fillRect(this.x, this.y, this.width, this.height);
 			if (this.prediction && this.pong.cfg.predictions) {
 				ctx.strokeStyle = Pong.Colors.predictionExact;

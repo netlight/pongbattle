@@ -65,8 +65,8 @@
         stats:       false,
         footprints:  false,
         predictions: false,
-        aiFunc1: new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], contestantLeft.code),
-        aiFunc2: new Function(["dt", "paddleInfo", "ballInfo", "gameInfo"], contestantRight.code),
+        ai1: (new Function(contestantLeft.code))(),
+        ai2: (new Function(contestantRight.code))(),
         onLoad: function(game) {
           game.start(0);
         },

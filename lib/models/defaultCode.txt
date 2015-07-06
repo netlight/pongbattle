@@ -1,0 +1,8 @@
+return {
+    height: 50, // of 100
+    speed: 50, // of 100
+    color: '#36185F', // Netlight purple
+    movePaddle: function (dt, paddleInfo, ballInfo, gameInfo) {
+        return 0; // don't move at all
+    }
+}
