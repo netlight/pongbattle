@@ -32,13 +32,228 @@ body { background-color: white; color: #AAA; font-size: 12pt; padding: 1em; }
 
 @media screen and (min-width: 1000px) {
 	#sidebar { display: block; }
-	#game    { margin-left: 18em; }
+	.canvas-container #game    { margin-left: 0px; }
+	.contestant-container #game    { margin-left: 18em; }
 }
 
 @media screen and (min-width: 1200px) {
-	#game    { width: 800px; height: 600px; }
+	.canvas-container #game    { margin-left: 0px; }
+	.contestant-container  #game    { width: 640px; height: 600px; }
+	
 }
 
 @media screen and (min-width: 1600px) {
 	#game    { width: 1024px; height: 768px; }
 }
+
+/*-------CANVAS--------*/
+
+.canvas-container{
+	//width: 100%;
+	text-align: center;
+	/*margin: 0 200px;*/
+	perspective: 1px;
+	/*transform: rotate3d(49,-16,12,70deg);*/
+	transform: rotate3d(-105,35,24,73deg);
+	-webkit-box-shadow: 21px 29px 27px 21px rgba(0,0,0,75);
+	-moz-box-shadow: 21px 29px 27px 21px rgba(0,0,0,75);
+	box-shadow: 21px 29px 27px 21px rgba(0,0,0,75);
+}
+.perspective-container{
+	width: 640px;
+	/*border: 1px solid black;*/
+	margin: 15% 7% 0px;
+}
+
+/*-------BACKGROUND AND RESULTS--------*/
+@font-face{
+	font-family: "Eurostar";
+	src: url('eurostar.ttf'); /* IE9 Compat Modes */
+  	src: url('eurostar.ttf?#iefix') format('truetype'), /* IE6-IE8 */
+  	     url('eurostar.ttf') format('truetype'), /* Super Modern Browsers */
+  	     url('eurostar.ttf') format('truetype'), /* Pretty Modern Browsers */
+  	     url('eurostar.ttf')  format('truetype'), /* Safari, Android, iOS */
+}
+body{
+	font-family: Eurostile;
+}
+.main-canvas{
+	background-color: /*#36185F*/ #FFFFFF;
+	width: 100%;
+	height: 100%;
+}
+.logo{
+	/*float: right;*/
+	position: absolute;
+	z-index: 15;
+	right: 15px;
+	box-shadow: rgba(255, 255, 255, 0.89) -15px 14px 168px 46px, inset rgba(255, 255, 255, 0.61) 1px 1px 168px 79px;
+    border-radius: 20px;
+	top: 35px;
+	padding-right: 20px;
+}
+.main-canvas  .main-title{
+	position: absolute;
+	margin: 30px 0 0 60px;
+	z-index: 10;
+	font-weight: 600;
+	font-family: "Eurostile";
+	color: #D09D1D;
+}
+.subtitle{
+	width: 500px;
+	position: absolute;
+	margin: -140px 0 0 10px;
+	font-family: "Eurostile";
+	color: #D09D1D;
+	font-weight: 600;
+}
+.scores-title{
+	font-family: "Eurostile";
+	color: #D09D1D;
+	font-weight: 600;
+	text-align: center;
+}
+.line{
+	display: inline;
+	width: 100%;
+	margin: 5px 0;
+}
+.panel-player-name,
+.panel-player-score{
+	display: inline-block;
+}
+.winner-label{
+	font-weight: 800;
+}
+.main-canvas canvas{
+	background-color: rgba(14, 116, 14, 0.71);
+}
+.title{
+	font-family: "Eurostile";
+	color: #D09D1D;
+	font-size: 51px;
+	margin: 0;
+	padding: 20px;
+	width: 500px;
+	float: left;
+}
+.competences
+{
+	margin: 10px 0 0 50px;
+}
+div.clear{
+	clear:both;
+}
+.results{
+	font-family: "Eurostile";
+	color: #D09D1D;
+	font-size: 25px;
+	margin: 0;
+	padding: 10px 20px;
+}
+
+/*---dashboard*/
+html {
+  background-color: #ffffff;
+  font-size: 16px;
+  font-family: "Open Sans";
+  font-weight: 300;
+  color: White;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+body {
+  overflow: hidden;
+}
+
+.page {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  width: 90%;
+  height: 90%;
+  margin: auto auto;
+  background: rgb(53, 40, 90);
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  -moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8);
+  -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8);
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8);
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+.page .bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  margin: auto auto;
+  background-image: url('../images/NetlightBackground.jpg');
+  background-size: 800px 700px;
+  background-repeat: no-repeat;
+  -webkit-filter: blur(0px);
+  -moz-filter: blur(0px);
+  -o-filter: blur(0px);
+  -ms-filter: blur(0px);
+  filter: blur(0px);
+}
+.page .overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  margin: auto auto;
+  background-color: rgba(0, 233, 233, 0.1);
+}
+.scores{
+	width: 300px;
+	float: right;
+	margin: 120px 25px;
+}
+
+.panel {
+  background-color: rgba(0, 0, 0, 0.4);
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+.page-home .panel-player-name{
+  /*font-size: 4rem;
+  line-height: 8.0rem;*/
+  text-align: left;
+  text-indent: 20px;
+  margin: 2px 0px;
+  /*float: left;*/
+  width: 70%;
+  display: inline-block;
+}
+.page-home .panel-player-score{
+  /*position: absolute;
+  top: 30px;
+  width: 380px;*/
+  width: 30%;
+  margin: 2px 0px;
+  display: inline-block;
+  /*float: left;
+  right: 0px;*/
+  text-align: center;
+  cursor: pointer;
+  -moz-border-radius: 5px 0px 0px 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px 0px 0px 5px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+

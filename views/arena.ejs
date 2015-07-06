@@ -1,28 +1,42 @@
 <%- include('head_html'); %>
+<link href="css/pong.css" rel="stylesheet"/>
 <style>
   .highscore {
     float: right;
     width: 300px;
   }
 </style>
-<div class="highscore">
-  <h1>Highscore</h1>
-  <table class="table highscoreTable">
-    <thead>
-    <tr><th>Name</th><th>Score</th></tr>
-    </thead>
-    <tbody>
-    <tr><td>bla</td><td>blub</td></tr>
-    </tbody>
-  </table>
-</div>
-<div class="playField">
-  <h1>"<span class="player1Name"></span>" vs. "<span class="player2Name"></span>"</h1>
-  <canvas id="game">
-    <div id="unsupported">
-      Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element
-    </div>
-  </canvas>
+<div class="main-canvas">
+	<img alt="logo" class="logo" src="images/logo.png"/>
+	<div class="clear"></div>
+		
+		<h1 class="main-title">TU Challenge</h1>
+		<div style="display:block" class="page page-home">
+		  <div class="bg"></div>
+		  <div class="overlay"></div>
+			<div class="scores">
+			  <div class="highscore">
+				<h1 class="scores-title">Highscores</h1>
+				<div class="highscoreTable">
+				</div>
+			  </div>
+		</div>
+
+		<div class="playField">
+		  <div class="subtitle">
+			<h1>"<span class="player1Name"></span>" vs. "<span class="player2Name"></span>"</h1>
+		  </div>
+		  <div class="perspective-container">
+			<div class="canvas-container">	
+			  <canvas id="game">
+				<div id="unsupported">
+				  Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element
+				</div>
+			  </canvas>
+			 </div>
+			</div>
+		</div>
+	</div>
 </div>
 <script type="text/javascript">
   Game.ready(function() {
@@ -38,15 +52,24 @@
     socket.emit('getHighscores');
   });
   socket.on('getHighscores', function(highscores){
-    var line = $('<tr><td class="name"></td><td class="score"></td></tr>');
-    var content = $('.highscoreTable tbody');
+    /*var line = $('<tr><td class="name"></td><td class="score"></td></tr>');*/
+	var line = "";
+    var content = $('.highscoreTable');
     content.html("");
     for (var i=0;i<highscores.length;i++) {
       var score = highscores[i];
-      var l = line.clone();
-      l.find('.name').html(score.name);
-      l.find('.score').html(score.wins);
-      content.append(l);
+      var l = "";
+	  if(i == 0){
+		  line = $('<div class="panel panel-player-name"><div class="span panel-player-name"></div><div class="span winner-label">Current Winner</div></div><div class="panel panel-player-score"><div class="span panel-player-score"></div><div class="span winner-label">Points</div></div><br/><br/>');
+	  }
+	  else{
+		  line =  $('<div class="line"><div class="panel-player-name"></div><div class="panel-player-score"><div></div><br/>');
+	  }
+	  l = line.clone();
+	  l.find('.panel-player-name').html(score.name);
+	  l.find('.panel-player-score').html(score.wins);
+	  content.append(l);
+	  
     }
   });
   var pong;
