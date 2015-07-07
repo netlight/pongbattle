@@ -54,15 +54,16 @@ body { background-color: white; color: #AAA; font-size: 12pt; padding: 1em; }
 	/*margin: 0 200px;*/
 	perspective: 1px;
 	/*transform: rotate3d(49,-16,12,70deg);*/
-	transform: rotate3d(-105,35,24,73deg);
-	-webkit-box-shadow: 21px 29px 27px 21px rgba(0,0,0,75);
-	-moz-box-shadow: 21px 29px 27px 21px rgba(0,0,0,75);
-	box-shadow: 21px 29px 27px 21px rgba(0,0,0,75);
+	transform: scale(0.8, 0.8);
+	box-shadow: 21px 29px 27px 21px rgba(0,0,0,.3);
 }
 .perspective-container{
 	width: 640px;
 	/*border: 1px solid black;*/
-	margin: 15% 7% 0px;
+    position: absolute;
+    top: 120px;
+    left: 40px;
+    z-index: 10;
 }
 
 /*-------BACKGROUND AND RESULTS--------*/
@@ -100,14 +101,28 @@ body{
 	font-family: "Eurostile";
 	color: #D09D1D;
 }
-.subtitle{
-	width: 500px;
-	position: absolute;
-	margin: -140px 0 0 10px;
-	font-family: "Eurostile";
-	color: #D09D1D;
-	font-weight: 600;
+.subtitle .player1Name {
+  font-weight: bold;
+  font-family: "Eurostile";
+  color: #36185F;
+  display: block;
+  position:absolute;
+  left: 105px;
+  top: 100px;
+  text-shadow: 0px 0px 3px white;
 }
+
+.subtitle .player2Name {
+  font-weight: bold;
+  font-family: "Eurostile";
+  color: #36185F;
+  display: block;
+  position:absolute;
+  left: 355px;
+  top: 100px;
+  text-shadow: 0px 0px 3px white;
+}
+
 .scores-title{
 	font-family: "Eurostile";
 	color: #D09D1D;

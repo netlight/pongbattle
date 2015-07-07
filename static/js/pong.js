@@ -81,7 +81,7 @@ Pong.prototype.level = function(playerNo) {
 Pong.prototype.goal = function(playerNo) {
 		this.sounds.goal();
 		this.scores[playerNo] += 1;
-		if (this.scores[playerNo] == 9) {
+		if (this.scores[playerNo] == 5) {
 			this.cfg.onWin(playerNo, this.scores[0], this.scores[1]);
 			this.stop();
 		}
