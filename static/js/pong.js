@@ -237,7 +237,7 @@ Pong.Paddle = {
 			this.minY   = pong.cfg.wallWidth;
 			this.maxY   = pong.height - pong.cfg.wallWidth - this.height;
 			var maxSpeed = ((this.maxY - this.minY) / pong.cfg.paddleSpeed);
-			this.speed  = maxSpeed * (this.ai.speed/100);
+			this.speed  = maxSpeed/2 * (this.ai.speed/100) + maxSpeed/2;
 			this.setpos(rhs ? pong.width - this.width : 0, this.minY + (this.maxY - this.minY)/2);
 			this.setdir(0);
 		},

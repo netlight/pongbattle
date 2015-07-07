@@ -106,7 +106,7 @@ paddleInfo = {
         if (!isNumber(obj.speed)) {
           return false;
         }
-        if (obj.height + obj.speed > 100) {
+        if (obj.height + obj.speed !== 100) {
           return false;
         }
         if (!_.isString(obj.color) || !obj.color.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
